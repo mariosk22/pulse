@@ -35,7 +35,7 @@ The project is built using the following technologies:
 Pulse/
 ├── frontend/
 ├── backend/
-├── database/
+├── main/
 └── README.md
 ```
 
