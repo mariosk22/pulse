@@ -10,23 +10,19 @@ Pulse allows users to manage their training activities and work towards differen
 
 ## Features
 
-* User registration and authentication
+* User registration
 * User profiles
 * Workout and training tracking
-* Training history
-* Fitness challenges
 * Progress tracking
 * Statistics and performance overview
-* Achievement system
 
 ## Technologies
 
 The project is built using the following technologies:
 
-* Frontend: [Technology]
-* Backend: [Technology]
-* Database: [Technology]
-* Authentication: [Technology]
+* Frontend: [Angular]
+* Backend: [SpringBoot]
+* Database: [mySQL]
 * Version Control: Git and GitHub
 
 ## Project Structure
