@@ -1,0 +1,63 @@
+<div class="auth-layout">
+  <section class="auth-form-panel">
+    <div class="auth-form-inner">
+      <span class="auth-eyebrow">STEP 1 OF 3 ACCOUNT</span>
+      <h1 class="auth-title">Create your account</h1>
+      <div class="steps">
+        <span class="step step--active">ACCOUNT</span>
+        <span class="step">SPORT</span>
+        <span class="step">LEVEL</span>
+      </div>
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="field-row">
+          <label class="field">
+            <span class="field__label">FIRST NAME</span>
+            <input class="field__input" type="text" formControlName="firstName"/>
+          </label>
+       <label class="field">
+       <span class="field__label">LAST NAME</span>
+         <input class="field__input" type="text" formControlName="lastName" />
+          </label>
+        </div>
+
+          <label class="field">
+            <span class="field__label">EMAIL</span>
+            <input class="field__input" type="email" formControlName="email" placeholder="you@gmail.com"/>
+
+          </label>
+          <label class="field">
+            <span class="field__label">PASSWORD</span>
+            <input class="field__input" type="password" formControlName="password" placeholder="At least 8 characters"/>
+
+          </label>
+       @if(errorMessage){
+        <p class="form-error">{{errorMessage}}</p>
+       }
+       <button class="btn btn--primary btn--block" type="submit" [disabled]="form.invalid">
+       CONTINUE TO SPORT SELECTION <span class="btn__arrow">›</span>
+       </button>
+      </form>
+      <p class="auth-footer">
+        Already have an account?<a routerLink="/login">SIGN IN</a>
+      </p>
+
+    </div>
+
+  </section>
+</div>
+<section class="auth-visual">
+  <div class="auth-visual__overlay">
+    <span class="auth-visual__eyebrow">ATHLETIC OS</span>
+    <h2 class="auth-visual__title">8 sports,3levels,one 12-week,plan</h2>
+    <div class="auth-visual__stats">
+      <div class="stat">
+        <span class="stat__lable">TRAINING</span>
+        <span class="stat__value">By sport</span>
+      </div>
+      <div class="stat">
+        <span class="stat__lable">NUTRITION</span>
+        <span class="stat_value">By workload</span>
+      </div>
+    </div>
+  </div>
+</section>
