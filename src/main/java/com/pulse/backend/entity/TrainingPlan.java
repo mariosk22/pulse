@@ -20,7 +20,7 @@ public class TrainingPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sport_id",nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sport_id",nullable = false)
@@ -35,7 +35,7 @@ public class TrainingPlan {
     private Goal goal;
 
     @Column(name = "start_date",nullable = false)
-    private LocalDate localDate;
+    private LocalDate startDate;
 
     @Column(name = "duration_weeks",nullable = false)
     private Integer durationWeeks;

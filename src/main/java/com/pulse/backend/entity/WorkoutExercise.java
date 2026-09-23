@@ -1,5 +1,4 @@
 package com.pulse.backend.entity;
-import com.pulse.backend.entity.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 @Entity
@@ -12,17 +11,17 @@ import lombok.*;
 public class WorkoutExercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workout_id",nullable = false)
     private Workout workout;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id",nullable = false)
-    private Excercise excercise;
+    private Exercise exercise;
     @Column(name = "order_index",nullable = false)
     private Integer orderIndex;
-    private Integer steps;
+    private Integer sets;
     private Integer reps;
 
     @Column(name = "duration_seconds")
