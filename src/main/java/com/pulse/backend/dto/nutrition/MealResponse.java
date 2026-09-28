@@ -9,9 +9,10 @@ public class MealResponse {
     private final String description;
 
     public MealResponse(Meal meal){
-        this.mealType= meal.getMealType().name();
-        this.name=meal.getName();
-        this.calories = meal.getCalories();
-        this.description=meal.getDescription();
+        this.mealType = meal.getMealType().name();
+        this.name = meal.getName();
+        this.calories=meal.getCalories();
+        this.description =meal.getDescription();
+
     }
 }

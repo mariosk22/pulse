@@ -2,7 +2,6 @@ package com.pulse.backend.dto.progress;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
-
 @Getter
 @Setter
 public class ProgressLogRequest {
@@ -10,5 +9,5 @@ public class ProgressLogRequest {
     private Double weightKg;
     private Double bodyFatPct;
     private String notes;
-
+    
 }
