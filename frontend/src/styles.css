@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+/* PULSE global theme tokens. Referenced by every feature stylesheet. */
+:root {
+  --pulse-bg: #0a0a0a;
+  --pulse-bg-elevated: #141414;
+  --pulse-border: #2a2a2a;
+  --pulse-text: #f2f2f2;
+  --pulse-text-muted: #8a8a8a;
+  --pulse-accent: #4ade80;
+  --pulse-accent-contrast: #0a0a0a;
+  --pulse-danger: #f87171;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--pulse-bg);
+  color: var(--pulse-text);
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

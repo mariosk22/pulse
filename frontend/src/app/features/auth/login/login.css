@@ -33,7 +33,7 @@
 }
 .stat{display: flex; flex-direction: column;gap: 4px;}
 .stat__label{font-size: 11px; color: var(--pulse-text-muted); letter-spacing:0.08em ;}
-.stat__value{font-size: 16;font-weight: 700;}
+.stat__value{font-size: 16px;font-weight: 700;}
 .stat__value--accent{color: var(--pulse-accent);}
 
 

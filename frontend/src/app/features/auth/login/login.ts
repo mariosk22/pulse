@@ -1,14 +1,13 @@
-import { routes } from './../../../app.routes';
-import { Component, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder,ReactiveFormsModule,Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { email } from '@angular/forms/signals';
+import { ApiError } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-login',
-  standalone:true,
-  imports: [ ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -17,19 +16,35 @@ export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  form = this.fb.group({
-    email:['',[Validators.required,Validators.email]],
-    password:['',Validators.required]
+  readonly form = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   });
-errorMessage ='';
 
+  readonly errorMessage = signal('');
+  readonly submitting = signal(false);
 
-OnSubmit():void{
-  if (this.form.invalid)return;
-  this.authService.login(this.form.getRawValue()as any).subscribe({
-    next:()=>this.router.navigateByUrl('/dashboard'),
-    error:(err)=> this.errorMessage = err.error?.message?? 'Login Failed '
+  OnSubmit(): void {
+    if (this.form.invalid || this.submitting()) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  });
-}
+    this.submitting.set(true);
+    this.errorMessage.set('');
+
+    this.authService.login(this.form.getRawValue()).subscribe({
+      next: () => this.router.navigateByUrl('/dashboard'),
+      error: (err: HttpErrorResponse) => {
+        this.submitting.set(false);
+        this.errorMessage.set(this.readError(err, 'Login failed. Please try again.'));
+      },
+    });
+  }
+
+  /** Surfaces the message from the backend's GlobalExceptionHandler body. */
+  private readError(err: HttpErrorResponse, fallback: string): string {
+    const body = err.error as ApiError | null;
+    return body?.message ?? fallback;
+  }
 }
