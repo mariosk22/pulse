@@ -1,8 +1,6 @@
 package com.pulse.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
-
 import java.time.Instant;
 @Entity
 @Table(name = "workout_completions")

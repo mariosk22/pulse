@@ -24,7 +24,7 @@ private final AuthenticationManager authenticationManager;
 
 public AuthResponse register(RegisterRequest request){
     if (userRepository.existsByEmail(request.getEmail())){
-        throw new ApiException(HttpStatus.CONFLICT,"Account with this email is already is exists");
+        throw new ApiException(HttpStatus.CONFLICT,"An account with this email already exists");
     }
     User user = User.builder()
             .email(request.getEmail())

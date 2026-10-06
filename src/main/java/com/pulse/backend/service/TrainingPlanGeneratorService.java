@@ -1,16 +1,21 @@
 package com.pulse.backend.service;
 
-
-import com.pulse.backend.entity.*;
+import com.pulse.backend.entity.Exercise;
+import com.pulse.backend.entity.TrainingPlan;
+import com.pulse.backend.entity.User;
+import com.pulse.backend.entity.Workout;
+import com.pulse.backend.entity.WorkoutExercise;
 import com.pulse.backend.entity.enums.ExerciseType;
 import com.pulse.backend.entity.enums.Goal;
 import com.pulse.backend.entity.enums.Level;
+import com.pulse.backend.entity.enums.PlanStatus;
 import com.pulse.backend.exception.ApiException;
 import com.pulse.backend.repository.ExerciseRepository;
 import com.pulse.backend.repository.TrainingPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,14 +25,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrainingPlanGeneratorService {
 
+    private static final int MAX_EXERCISES_PER_WORKOUT = 5;
+
     private final ExerciseRepository exerciseRepository;
     private final TrainingPlanRepository trainingPlanRepository;
 
+    @Transactional
     public TrainingPlan generate(User user, int durationWeeks) {
         if (user.getSport() == null || user.getLevel() == null || user.getGoal() == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST,
-                    "Najprv dokonci onboarding (sport, uroven, ciel)");
+                    "Finish onboarding first (sport, level and goal are required)");
         }
+
+        List<Exercise> pool = exerciseRepository.findAvailable(
+                user.getSport().getId(),
+                primaryExerciseTypeFor(user.getGoal()),
+                allowedLevelsUpTo(user.getLevel()));
+        if (pool.isEmpty()) {
+            throw new ApiException(HttpStatus.CONFLICT,
+                    "The exercise catalog has no exercises for this sport and level yet");
+        }
+
+        trainingPlanRepository.findByUserAndStatus(user, PlanStatus.ACTIVE)
+                .forEach(oldPlan -> oldPlan.setStatus(PlanStatus.ARCHIVED));
 
         TrainingPlan plan = TrainingPlan.builder()
                 .user(user)
@@ -39,10 +59,10 @@ public class TrainingPlanGeneratorService {
                 .build();
 
         List<Integer> trainingDays = trainingDaysFor(user.getLevel());
-
+        int workoutIndex = 0;
         for (int week = 1; week <= durationWeeks; week++) {
             for (int dayOfWeek : trainingDays) {
-                Workout workout = buildWorkout(user, week, dayOfWeek);
+                Workout workout = buildWorkout(user.getGoal(), pool, week, dayOfWeek, workoutIndex++);
                 workout.setTrainingPlan(plan);
                 plan.getWorkouts().add(workout);
             }
@@ -51,49 +71,35 @@ public class TrainingPlanGeneratorService {
         return trainingPlanRepository.save(plan);
     }
 
+    private Workout buildWorkout(Goal goal, List<Exercise> pool, int week, int dayOfWeek, int workoutIndex) {
+        Workout workout = Workout.builder()
+                .weekNumber(week)
+                .dayOfWeek(dayOfWeek)
+                .name(workoutNameFor(goal))
+                .build();
+
+        int count = Math.min(MAX_EXERCISES_PER_WORKOUT, pool.size());
+        int start = (workoutIndex * count) % pool.size();
+        for (int i = 0; i < count; i++) {
+            Exercise exercise = pool.get((start + i) % pool.size());
+            workout.getWorkoutExercises().add(WorkoutExercise.builder()
+                    .workout(workout)
+                    .exercise(exercise)
+                    .orderIndex(i + 1)
+                    .sets(setsFor(goal))
+                    .reps(repsFor(goal))
+                    .restSeconds(restSecondsFor(goal))
+                    .build());
+        }
+        return workout;
+    }
+
     private List<Integer> trainingDaysFor(Level level) {
         return switch (level) {
             case BEGINNER -> List.of(1, 3, 5);
             case INTERMEDIATE -> List.of(1, 2, 3, 5, 6);
             case PRO -> List.of(1, 2, 3, 4, 5, 6);
         };
-    }
-
-    private Workout buildWorkout(User user, int week, int dayOfWeek) {
-        ExerciseType primaryType = primaryExerciseTypeFor(user.getGoal());
-        List<Level> allowedLevels = allowedLevelsUpTo(user.getLevel());
-
-        List<Exercise> available = exerciseRepository.findAvailable(
-                user.getSport().getId(), primaryType, allowedLevels);
-
-        if (available.isEmpty()) {
-            throw new ApiException(HttpStatus.CONFLICT,
-                    "Pre tento sport/uroven zatial nemame dostatok cviceni v katalogu");
-        }
-
-        Workout workout = Workout.builder()
-                .weekNumber(week)
-                .dayOfWeek(dayOfWeek)
-                .name(workoutNameFor(user.getGoal()))
-                .build();
-
-        int exercisesPerWorkout = Math.min(5, available.size());
-        for (int i = 0; i < exercisesPerWorkout; i++) {
-            Exercise exercise = available.get(i);
-
-            WorkoutExercise we = WorkoutExercise.builder()
-                    .workout(workout)
-                    .exercise(exercise)
-                    .orderIndex(i + 1)
-                    .sets(setsFor(user.getGoal()))
-                    .reps(repsFor(user.getGoal()))
-                    .restSeconds(restSecondsFor(user.getGoal()))
-                    .build();
-
-            workout.getWorkoutExercises().add(we);
-        }
-
-        return workout;
     }
 
     private ExerciseType primaryExerciseTypeFor(Goal goal) {
@@ -105,11 +111,11 @@ public class TrainingPlanGeneratorService {
 
     private String workoutNameFor(Goal goal) {
         return switch (goal) {
-            case WEIGHT_LOSS -> "Spalovanie tuku";
-            case MUSCLE_GAIN -> "Naberanie svalov";
-            case ENDURANCE -> "Vytrvalostny trening";
-            case STRENGTH -> "Silovy trening";
-            case GENERAL_FITNESS -> "Celkova kondicia";
+            case WEIGHT_LOSS -> "Fat burning";
+            case MUSCLE_GAIN -> "Muscle building";
+            case ENDURANCE -> "Endurance training";
+            case STRENGTH -> "Strength training";
+            case GENERAL_FITNESS -> "General fitness";
         };
     }
 
@@ -142,12 +148,13 @@ public class TrainingPlanGeneratorService {
     }
 
     private List<Level> allowedLevelsUpTo(Level level) {
-        List<Level> all = List.of(Level.BEGINNER, Level.INTERMEDIATE, Level.PRO);
-        List<Level> result = new ArrayList<>();
-        for (Level l : all) {
-            result.add(l);
-            if (l == level) break;
+        List<Level> allowed = new ArrayList<>();
+        for (Level candidate : Level.values()) {
+            allowed.add(candidate);
+            if (candidate == level) {
+                break;
+            }
         }
-        return result;
+        return allowed;
     }
 }

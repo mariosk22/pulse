@@ -14,7 +14,7 @@ import lombok.*;
 public class Exercise {
 @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 @Column(nullable = false)
     private String name;
 @Column(length = 1000)

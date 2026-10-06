@@ -3,8 +3,10 @@ package com.pulse.backend.service;
 import com.pulse.backend.dto.progress.ProgressLogRequest;
 import com.pulse.backend.entity.ProgressLog;
 import com.pulse.backend.entity.User;
+import com.pulse.backend.exception.ApiException;
 import com.pulse.backend.repository.ProgressLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,6 +19,9 @@ public class ProgressService {
     private final ProgressLogRepository progressLogRepository;
 
     public ProgressLog addLog(User user, ProgressLogRequest request) {
+        if (request.getWeightKg() == null && request.getBodyFatPct() == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Provide at least weightKg or bodyFatPct");
+        }
         ProgressLog log = ProgressLog.builder()
                 .user(user)
                 .logDate(request.getLogDate() != null ? request.getLogDate() : LocalDate.now())
