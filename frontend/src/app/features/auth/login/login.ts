@@ -40,7 +40,7 @@ export class Login {
       },
       error: (err) => {
         this.submitting.set(false);
-        this.errorMessage.set(apiErrorMessage(err, 'Prihlásenie zlyhalo. Skús to prosím znova.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Login failed. Please try again.'));
       },
     });
   }

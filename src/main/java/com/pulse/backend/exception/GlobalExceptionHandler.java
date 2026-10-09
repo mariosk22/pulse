@@ -35,8 +35,8 @@ public class GlobalExceptionHandler {
             return buildResponse(HttpStatus.BAD_REQUEST, message);
         }
 
-        // Bez tohto handledu by nehandleodovana vynimka skoncila na /error, ktory
-        // Spring Security blokuje -> klient by dostal 403 s prazdnym telom namiesto 500.
+        // Without this handler an unhandled exception would end up at /error, which
+        // Spring Security blocks -> the client would get a 403 with an empty body instead of 500.
         @ExceptionHandler(Exception.class)
         public ResponseEntity<Object> handleUnexpected(Exception ex){
             log.error("Unhandled exception", ex);

@@ -8,10 +8,10 @@ import { Shell } from '../layout/shell/shell';
 const MEAL_ORDER = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK'] as const;
 
 const MEAL_LABELS: Record<MealType, string> = {
-  BREAKFAST: 'RAŇAJKY',
-  LUNCH: 'OBED',
-  DINNER: 'VEČERA',
-  SNACK: 'OLOVRANT',
+  BREAKFAST: 'BREAKFAST',
+  LUNCH: 'LUNCH',
+  DINNER: 'DINNER',
+  SNACK: 'SNACK',
 };
 
 @Component({
@@ -35,7 +35,7 @@ export class Nutrition implements OnInit {
       next: (plan) => this.plan.set(plan),
       error: (err) => {
         if (!isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Výživový plan sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load the nutrition plan.'));
         }
         this.loading.set(false);
       },
@@ -57,7 +57,7 @@ export class Nutrition implements OnInit {
       error: (err) => {
         this.generating.set(false);
         // 400 when the profile is missing height, weight, age or gender.
-        this.errorMessage.set(apiErrorMessage(err, 'Výživový plan sa nepodarilo vygenerovať.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Could not generate the nutrition plan.'));
       },
     });
   }

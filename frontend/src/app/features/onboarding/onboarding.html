@@ -1,26 +1,26 @@
 <div class="onb">
   <header class="onb__header">
-    <span class="onb__eyebrow">STEP 2 OF 3 PROFIL</span>
-    <h1 class="onb__title">Nastav si trening</h1>
+    <span class="onb__eyebrow">STEP 2 OF 3 &middot; PROFILE</span>
+    <h1 class="onb__title">Set up your training</h1>
     <p class="onb__subtitle">
-      Podľa športu, úrovne a cíla ti backend vygeneruje 12-týždňový plán aj výživu.
+      Based on your sport, level and goal, the backend will generate a 12-week plan and nutrition.
     </p>
     <div class="steps">
       <span class="step">ACCOUNT</span>
-      <span class="step step--active">PROFIL</span>
+      <span class="step step--active">PROFILE</span>
       <span class="step">PLAN</span>
     </div>
   </header>
 
   @if (loadingSports()) {
-    <p class="onb__hint">Načítavam športy&hellip;</p>
+    <p class="onb__hint">Loading sports&hellip;</p>
   } @else if (sportsError()) {
     <p class="form-error">{{ sportsError() }}</p>
   }
 
   <form class="onb__form" [formGroup]="form" (ngSubmit)="OnSubmit()">
     <section class="block">
-      <h2 class="block__title">01 &middot; ŠPORT</h2>
+      <h2 class="block__title">01 &middot; SPORT</h2>
       <div class="choices choices--sports">
         @for (sport of sports(); track sport.id) {
           <button
@@ -35,13 +35,13 @@
             }
           </button>
         } @empty {
-          <p class="onb__hint">Backend nemá v tabuľke sports žiadny záznam.</p>
+          <p class="onb__hint">The backend has no records in the sports table.</p>
         }
       </div>
     </section>
 
     <section class="block">
-      <h2 class="block__title">02 &middot; ÚROVEŇ</h2>
+      <h2 class="block__title">02 &middot; LEVEL</h2>
       <div class="choices choices--row">
         @for (level of levels; track level.value) {
           <button
@@ -58,7 +58,7 @@
     </section>
 
     <section class="block">
-      <h2 class="block__title">03 &middot; CIEĽ</h2>
+      <h2 class="block__title">03 &middot; GOAL</h2>
       <div class="choices choices--row">
         @for (goal of goals; track goal.value) {
           <button
@@ -76,23 +76,23 @@
 
     <section class="block">
       <h2 class="block__title">
-        04 &middot; TELO <span class="block__note">potrebné na výpočet výživy</span>
+        04 &middot; BODY <span class="block__note">needed to calculate nutrition</span>
       </h2>
       <div class="grid">
         <label class="field">
-          <span class="field__label">POHLAVIE</span>
+          <span class="field__label">SEX</span>
           <select class="field__input field__input--select" formControlName="gender">
-            <option value="">Nevyplnené</option>
-            <option value="MALE">Muž</option>
-            <option value="FEMALE">Žena</option>
+            <option value="">Not set</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
           </select>
         </label>
         <label class="field">
-          <span class="field__label">VEAK</span>
+          <span class="field__label">AGE</span>
           <input class="field__input" type="number" min="10" max="100" formControlName="age" />
         </label>
         <label class="field">
-          <span class="field__label">VÝŠKA (CM)</span>
+          <span class="field__label">HEIGHT (CM)</span>
           <input
             class="field__input"
             type="number"
@@ -102,7 +102,7 @@
           />
         </label>
         <label class="field">
-          <span class="field__label">VAHA (KG)</span>
+          <span class="field__label">WEIGHT (KG)</span>
           <input
             class="field__input"
             type="number"
@@ -125,9 +125,9 @@
       [disabled]="form.invalid || submitting()"
     >
       @if (submitting()) {
-        UKLADÁM…
+        SAVING…
       } @else {
-        POKRAČOVAŤ DO PLÁNU <span class="btn__arrow">&rarr;</span>
+        CONTINUE TO PLAN <span class="btn__arrow">&rarr;</span>
       }
     </button>
   </form>

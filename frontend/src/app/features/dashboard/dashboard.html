@@ -4,11 +4,11 @@
       <div>
         <span class="dash__eyebrow">PULSE &middot; DASHBOARD</span>
         @if (user(); as current) {
-          <h1 class="dash__title">Ahoj, {{ current.fullName }}</h1>
+          <h1 class="dash__title">Hi, {{ current.fullName }}</h1>
         }
       </div>
       @if (loading()) {
-        <span class="dash__loading">Načítavam…</span>
+        <span class="dash__loading">Loading…</span>
       }
     </header>
 
@@ -19,19 +19,19 @@
     <section class="stats">
       @if (user(); as current) {
         <div class="stat">
-          <span class="stat__label">ŠPORT</span>
+          <span class="stat__label">SPORT</span>
           <span class="stat__value">{{ current.sportName ?? '—' }}</span>
         </div>
         <div class="stat">
-          <span class="stat__label">ÚROVEŇ</span>
+          <span class="stat__label">LEVEL</span>
           <span class="stat__value">{{ current.level ?? '—' }}</span>
         </div>
         <div class="stat">
-          <span class="stat__label">CIEĽ</span>
+          <span class="stat__label">GOAL</span>
           <span class="stat__value">{{ current.goal ?? '—' }}</span>
         </div>
         <div class="stat">
-          <span class="stat__label">POT</span>
+          <span class="stat__label">CALORIES</span>
           <span class="stat__value">{{ nutrition()?.dailyCalories ?? '—' }} kcal</span>
         </div>
       }
@@ -39,11 +39,11 @@
 
     <section class="panel">
       <div class="panel__head">
-        <h2 class="panel__title">TRÉNINGOVÝ PLÁN</h2>
+        <h2 class="panel__title">TRAINING PLAN</h2>
         <div class="panel__aside">
           @if (plan(); as activePlan) {
             <span class="panel__meta">
-              {{ activePlan.sportName }} &middot; {{ activePlan.durationWeeks }} týždňov &middot; od
+              {{ activePlan.sportName }} &middot; {{ activePlan.durationWeeks }} weeks &middot; from
               {{ activePlan.startDate }}
             </span>
           }
@@ -85,7 +85,7 @@
                         —
                       }
                       @if (exercise.restSeconds) {
-                        &middot; odpočinink {{ exercise.restSeconds }}s
+                        &middot; rest {{ exercise.restSeconds }}s
                       }
                     </span>
                   </li>
@@ -93,36 +93,36 @@
               </ol>
             </article>
           } @empty {
-            <p class="empty">Tento týždeň nemá žiadne treningy.</p>
+            <p class="empty">This week has no workouts.</p>
           }
         </div>
       } @else {
-        <p class="empty">Zatiaľ nemáš žiadny aktívny plán.</p>
-        <a class="btn btn--primary" routerLink="/plan">VYTVORIŤ PLÁN</a>
+        <p class="empty">You have no active plan yet.</p>
+        <a class="btn btn--primary" routerLink="/plan">CREATE PLAN</a>
       }
     </section>
 
     <div class="cols">
       <section class="panel">
         <div class="panel__head">
-          <h2 class="panel__title">VÝŽIVA</h2>
+          <h2 class="panel__title">NUTRITION</h2>
           <a class="panel__link" routerLink="/nutrition">DETAIL</a>
         </div>
         @if (nutrition(); as macros) {
           <ul class="macros">
             <li>
-              <span>Bielkoviny</span><strong>{{ macros.proteinG }} g</strong>
+              <span>Protein</span><strong>{{ macros.proteinG }} g</strong>
             </li>
             <li>
-              <span>Sacharidy</span><strong>{{ macros.carbsG }} g</strong>
+              <span>Carbs</span><strong>{{ macros.carbsG }} g</strong>
             </li>
             <li>
-              <span>Tuky</span><strong>{{ macros.fatG }} g</strong>
+              <span>Fat</span><strong>{{ macros.fatG }} g</strong>
             </li>
           </ul>
         } @else {
-          <p class="empty">Výživový plan ešte nie je vygenerovaný.</p>
-          <a class="btn btn--ghost" routerLink="/nutrition">VYTVORIŤ</a>
+          <p class="empty">The nutrition plan hasn't been generated yet.</p>
+          <a class="btn btn--ghost" routerLink="/nutrition">CREATE</a>
         }
       </section>
 
@@ -134,18 +134,18 @@
         @if (latestLog(); as latest) {
           <ul class="macros">
             <li>
-              <span>Dátum</span><strong>{{ latest.logDate }}</strong>
+              <span>Date</span><strong>{{ latest.logDate }}</strong>
             </li>
             <li>
-              <span>Váha</span><strong>{{ latest.weightKg ?? '—' }} kg</strong>
+              <span>Weight</span><strong>{{ latest.weightKg ?? '—' }} kg</strong>
             </li>
             <li>
-              <span>Telo tuky</span><strong>{{ latest.bodyFatPct ?? '—' }} %</strong>
+              <span>Body fat</span><strong>{{ latest.bodyFatPct ?? '—' }} %</strong>
             </li>
           </ul>
         } @else {
-          <p class="empty">Zatiaľ nemáš žiadny záznam.</p>
-          <a class="btn btn--ghost" routerLink="/progress">PRIDAŤ ZÁZNAM</a>
+          <p class="empty">You have no records yet.</p>
+          <a class="btn btn--ghost" routerLink="/progress">ADD ENTRY</a>
         }
       </section>
     </div>

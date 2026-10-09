@@ -3,7 +3,7 @@
     <header class="page__head">
       <div>
         <span class="page__eyebrow">PROGRESS</span>
-        <h1 class="page__title">Vývoj</h1>
+        <h1 class="page__title">Progress</h1>
       </div>
     </header>
 
@@ -13,14 +13,14 @@
 
     <div class="cols">
       <section class="panel">
-        <h2 class="panel__title">NOVÝ ZÁZNAM</h2>
+        <h2 class="panel__title">NEW ENTRY</h2>
         <form class="form" [formGroup]="form" (ngSubmit)="OnSubmit()">
           <label class="field">
-            <span class="field__label">DÁTUM</span>
+            <span class="field__label">DATE</span>
             <input class="field__input" type="date" formControlName="logDate" />
           </label>
           <label class="field">
-            <span class="field__label">VÁHA (KG)</span>
+            <span class="field__label">WEIGHT (KG)</span>
             <input
               class="field__input"
               type="number"
@@ -31,7 +31,7 @@
             />
           </label>
           <label class="field">
-            <span class="field__label">TELO TUKY (%)</span>
+            <span class="field__label">BODY FAT (%)</span>
             <input
               class="field__input"
               type="number"
@@ -42,7 +42,7 @@
             />
           </label>
           <label class="field">
-            <span class="field__label">POZNÁMKA</span>
+            <span class="field__label">NOTE</span>
             <textarea
               class="field__input field__input--area"
               rows="3"
@@ -61,36 +61,36 @@
             [disabled]="form.invalid || submitting()"
           >
             @if (submitting()) {
-              UKLADÁM…
+              SAVING…
             } @else {
-              ULOŽIŤ ZÁZNAM
+              SAVE ENTRY
             }
           </button>
         </form>
       </section>
 
       <section class="panel">
-        <h2 class="panel__title">HISTÓRIA</h2>
+        <h2 class="panel__title">HISTORY</h2>
 
         @if (loading()) {
-          <p class="empty">Načítavam záznamy…</p>
+          <p class="empty">Loading records…</p>
         } @else if (logs().length === 0) {
-          <p class="empty">Zatiaľ nemáš žiadny záznam. Pridaj prvé meranie.</p>
+          <p class="empty">You have no records yet. Add your first measurement.</p>
         } @else {
           <div class="delta">
-            <span class="delta__label">ZMENA VÁHY</span>
+            <span class="delta__label">WEIGHT CHANGE</span>
             @if (weightDelta(); as delta) {
               <span class="delta__value" [class.delta__value--down]="delta < 0">
                 {{ delta > 0 ? '+' : '' }}{{ delta }} kg
               </span>
             } @else {
-              <span class="delta__value delta__value--muted">potrebuje 2 záznamy</span>
+              <span class="delta__value delta__value--muted">needs 2 records</span>
             }
           </div>
 
           @if (has('weightKg')) {
             <div class="range">
-              <span class="range__label">ROZSAH VÁHY</span>
+              <span class="range__label">WEIGHT RANGE</span>
               <span class="range__value">{{ rangeLabel('weightKg') }} kg</span>
             </div>
           }
@@ -98,10 +98,10 @@
           <table class="table">
             <thead>
               <tr>
-                <th>DÁTUM</th>
-                <th class="num">VÁHA</th>
-                <th class="num">TUK</th>
-                <th>POZNÁMKA</th>
+                <th>DATE</th>
+                <th class="num">WEIGHT</th>
+                <th class="num">FAT</th>
+                <th>NOTE</th>
               </tr>
             </thead>
             <tbody>

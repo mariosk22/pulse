@@ -7,7 +7,7 @@ import { apiErrorMessage, isNotFound } from '../../core/services/api-error';
 import { NutritionPlan, ProgressLog, TrainingPlan } from '../../core/models/plan.model';
 import { Shell } from '../layout/shell/shell';
 
-const WEEKDAY_LABELS = ['', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota', 'Nedeľa'];
+const WEEKDAY_LABELS = ['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 @Component({
   selector: 'app-dashboard',
@@ -55,7 +55,7 @@ export class Dashboard implements OnInit {
       next: (plan) => this.plan.set(plan),
       error: (err) => {
         if (!isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Tréningový plan sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load the training plan.'));
         }
       },
     });
@@ -64,7 +64,7 @@ export class Dashboard implements OnInit {
       next: (plan) => this.nutrition.set(plan),
       error: (err) => {
         if (!isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Výživový plan sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load the nutrition plan.'));
         }
       },
     });
@@ -74,7 +74,7 @@ export class Dashboard implements OnInit {
       error: (err) => {
         // A 401 means the interceptor already redirected to the login form.
         if (err.status !== 401 && !isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Progress sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load progress.'));
         }
       },
       complete: () => this.loading.set(false),

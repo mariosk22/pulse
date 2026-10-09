@@ -5,7 +5,7 @@ import { AuthService } from '../../../core/services/auth.service';
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard' },
   { path: '/plan', label: 'Plan' },
-  { path: '/nutrition', label: 'Výživa' },
+  { path: '/nutrition', label: 'Nutrition' },
   { path: '/progress', label: 'Progress' },
 ];
 

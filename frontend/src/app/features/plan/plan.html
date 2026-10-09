@@ -3,11 +3,11 @@
     <header class="page__head">
       <div>
         <span class="page__eyebrow">PLAN</span>
-        <h1 class="page__title">Tréningový plán</h1>
+        <h1 class="page__title">Training plan</h1>
       </div>
       <div class="page__actions">
         <label class="field field--inline">
-          <span class="field__label">TÝŽDNE</span>
+          <span class="field__label">WEEKS</span>
           <input
             class="field__input field__input--num"
             type="number"
@@ -23,11 +23,11 @@
           [disabled]="generating()"
         >
           @if (activePlan()) {
-            REGENEROVAŤ
+            REGENERATE
           } @else if (generating()) {
-            GENERUJEM…
+            GENERATING…
           } @else {
-            VYTVORIŤ PLÁN
+            CREATE PLAN
           }
         </button>
       </div>
@@ -39,33 +39,33 @@
 
     @if (isViewingArchived()) {
       <div class="viewer-bar">
-        <span class="viewer-bar__badge">ARCHIVOVANÝ PLÁN</span>
+        <span class="viewer-bar__badge">ARCHIVED PLAN</span>
         <button class="link-btn" type="button" (click)="selectActive()">
-          &larr; SPÄŤ NA AKTÍVNY PLÁN
+          &larr; BACK TO ACTIVE PLAN
         </button>
       </div>
     }
 
     @if (loading() || loadingDetail()) {
-      <p class="empty">Načítavam plán…</p>
+      <p class="empty">Loading plan…</p>
     }
 
     @if (plan(); as currentPlan) {
       <div class="meta">
         <div class="meta__item">
-          <span>ŠPORT</span><strong>{{ currentPlan.sportName }}</strong>
+          <span>SPORT</span><strong>{{ currentPlan.sportName }}</strong>
         </div>
         <div class="meta__item">
-          <span>ÚROVEŇ</span><strong>{{ currentPlan.level }}</strong>
+          <span>LEVEL</span><strong>{{ currentPlan.level }}</strong>
         </div>
         <div class="meta__item">
-          <span>CIEĽ</span><strong>{{ currentPlan.goal }}</strong>
+          <span>GOAL</span><strong>{{ currentPlan.goal }}</strong>
         </div>
         <div class="meta__item">
-          <span>ZAČIATOK</span><strong>{{ currentPlan.startDate }}</strong>
+          <span>START</span><strong>{{ currentPlan.startDate }}</strong>
         </div>
         <div class="meta__item">
-          <span>STAV</span><strong>{{ currentPlan.status }}</strong>
+          <span>STATUS</span><strong>{{ currentPlan.status }}</strong>
         </div>
       </div>
 
@@ -83,8 +83,8 @@
       </div>
 
       <p class="week-label">
-        Týždeň {{ currentWeek() }} &middot; {{ completedInWeek() }} /
-        {{ currentWeekWorkouts().length }} dokončených
+        Week {{ currentWeek() }} &middot; {{ completedInWeek() }} /
+        {{ currentWeekWorkouts().length }} completed
       </p>
 
       <div class="workouts">
@@ -97,7 +97,7 @@
               </div>
               <div class="workout__actions">
                 @if (workout.completed) {
-                  <span class="workout__badge">DOKONČENÉ</span>
+                  <span class="workout__badge">COMPLETED</span>
                 }
                 <button
                   type="button"
@@ -108,11 +108,11 @@
                   [disabled]="completingId() === workout.id || isViewingArchived()"
                 >
                   @if (completingId() === workout.id) {
-                    UKLADÁM…
+                    SAVING…
                   } @else if (workout.completed) {
-                    ZRUŠIŤ
+                    UNDO
                   } @else {
-                    DOKONČIŤ
+                    COMPLETE
                   }
                 </button>
               </div>
@@ -121,10 +121,10 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>CVIČENIE</th>
-                  <th>SADY</th>
+                  <th>EXERCISE</th>
+                  <th>SETS</th>
                   <th>REPS</th>
-                  <th>ODPOČININK</th>
+                  <th>REST</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,17 +143,17 @@
             </table>
           </article>
         } @empty {
-          <p class="empty">Tento týždeň nemá žiadne treningy.</p>
+          <p class="empty">This week has no workouts.</p>
         }
       </div>
     } @else if (!loading()) {
       <div class="empty-state">
         <p class="empty">
           @if (user()?.sportName) {
-            Zatiaľ nemáš vygenerovaný plán. Klikni na „Vytvoriť plán“ a backend zostaví treningy
-            podľa tvojho športu a úrovne.
+            You don't have a plan yet. Click "Create plan" and the backend will build workouts
+            for your sport and level.
           } @else {
-            Najprv dokonči onboarding, aby plán mal z čoho vychádzať.
+            Finish onboarding first so the plan has something to build on.
           }
         </p>
       </div>
@@ -161,16 +161,16 @@
 
     <section class="history">
       <div class="history__head">
-        <h2 class="history__title">HISTÓRIA PLÁNOV</h2>
+        <h2 class="history__title">PLAN HISTORY</h2>
         @if (history().length > 1) {
-          <span class="history__count">{{ history().length }} plánov</span>
+          <span class="history__count">{{ history().length }} plans</span>
         }
       </div>
 
       @if (loadingHistory()) {
-        <p class="empty">Načítavam históriu…</p>
+        <p class="empty">Loading history…</p>
       } @else if (history().length === 0) {
-        <p class="empty">Zatiaľ nemáš žiadne uložené plány.</p>
+        <p class="empty">You have no saved plans yet.</p>
       } @else {
         <ul class="history__list">
           @for (item of history(); track item.id) {
@@ -185,7 +185,7 @@
                 <span class="history__main">
                   {{ item.sportName }} &middot; {{ item.level }} &middot; {{ item.goal }}
                 </span>
-                <span class="history__weeks">{{ item.durationWeeks }} týž.</span>
+                <span class="history__weeks">{{ item.durationWeeks }} wks</span>
                 <span
                   class="history__status"
                   [class.history__status--active]="item.status === 'ACTIVE'"

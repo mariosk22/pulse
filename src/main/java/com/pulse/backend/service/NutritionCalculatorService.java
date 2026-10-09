@@ -24,7 +24,7 @@ import java.util.List;
         public NutritionPlan generateForUser(User user, TrainingPlan trainingPlan) {
             if (user.getWeightKg() == null || user.getHeightCm() == null || user.getAge() == null || user.getGender() == null) {
                 throw new ApiException(HttpStatus.BAD_REQUEST,
-                        "Pre vypocet vyzivoveho planu potrebujeme vahu, vysku, vek a pohlavie (doplin v onboardingu)");
+                        "To calculate a nutrition plan we need weight, height, age and sex (fill them in during onboarding)");
             }
 
             double bmr = calculateBmr(user);
@@ -87,23 +87,22 @@ import java.util.List;
         private List<Meal> buildMeals(NutritionPlan plan) {
             int total = plan.getDailyCalories();
             return List.of(
-                    Meal.builder().nutritionPlan(plan).mealType(MealType.BREAKFAST).name("Ranajky")
+                    Meal.builder().nutritionPlan(plan).mealType(MealType.BREAKFAST).name("Breakfast")
                             .calories((int) Math.round(total * 0.25))
-                            .description("Zdroj bielkovin + komplexne sacharidy (napr. vajcia, ovsene vlocky).")
+                            .description("A source of protein plus complex carbohydrates (e.g. eggs, oatmeal).")
                             .build(),
-                    Meal.builder().nutritionPlan(plan).mealType(MealType.LUNCH).name("Obed")
+                    Meal.builder().nutritionPlan(plan).mealType(MealType.LUNCH).name("Lunch")
                             .calories((int) Math.round(total * 0.35))
-                            .description("Hlavne jedlo dna - chudе maso/ryba, priloha, zelenina.")
+                            .description("The main meal of the day: lean meat/fish, a side dish and vegetables.")
                             .build(),
-                    Meal.builder().nutritionPlan(plan).mealType(MealType.DINNER).name("Vecera")
+                    Meal.builder().nutritionPlan(plan).mealType(MealType.DINNER).name("Dinner")
                             .calories((int) Math.round(total * 0.25))
-                            .description("Lahsie jedlo - bielkoviny + zelenina.")
+                            .description("A lighter meal: protein plus vegetables.")
                             .build(),
-                    Meal.builder().nutritionPlan(plan).mealType(MealType.SNACK).name("Desiata/Olovrant")
+                    Meal.builder().nutritionPlan(plan).mealType(MealType.SNACK).name("Snack")
                             .calories((int) Math.round(total * 0.15))
-                            .description("Orechy, ovocie, jogurt.")
+                            .description("Nuts, fruit or yogurt.")
                             .build()
             );
         }
     }
-

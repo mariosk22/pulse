@@ -2,17 +2,17 @@
   <div class="page">
     <header class="page__head">
       <div>
-        <span class="page__eyebrow">VÝŽIVA</span>
-        <h1 class="page__title">Výživový plán</h1>
+        <span class="page__eyebrow">NUTRITION</span>
+        <h1 class="page__title">Nutrition plan</h1>
       </div>
       <button class="btn btn--primary" type="button" (click)="onGenerate()" [disabled]="generating()">
         @if (generating()) {
-          POCÍTAM…
+          CALCULATING…
         } @else {
           @if (plan()) {
-            PREPOČÍTAŤ
+            RECALCULATE
           } @else {
-            VYTVORIŤ PLÁN
+            CREATE PLAN
           }
         }
       </button>
@@ -23,29 +23,29 @@
     }
 
     @if (loading()) {
-      <p class="empty">Načítavam plán…</p>
+      <p class="empty">Loading plan…</p>
     }
 
     @if (plan(); as macros) {
       <section class="calories">
-        <span class="calories__label">DENNÁ KALÓRIA</span>
+        <span class="calories__label">DAILY CALORIES</span>
         <span class="calories__value">{{ macros.dailyCalories }}</span>
         <span class="calories__unit">kcal</span>
       </section>
 
       <section class="macros">
         <div class="macro">
-          <span class="macro__label">BIELKOVINY</span>
+          <span class="macro__label">PROTEIN</span>
           <span class="macro__value">{{ macros.proteinG }} g</span>
           <div class="bar"><div class="bar__fill" [style.width.%]="macroShare(macros.proteinG * 4)"></div></div>
         </div>
         <div class="macro">
-          <span class="macro__label">SACHARIDY</span>
+          <span class="macro__label">CARBS</span>
           <span class="macro__value">{{ macros.carbsG }} g</span>
           <div class="bar"><div class="bar__fill" [style.width.%]="macroShare(macros.carbsG * 4)"></div></div>
         </div>
         <div class="macro">
-          <span class="macro__label">TUKY</span>
+          <span class="macro__label">FAT</span>
           <span class="macro__value">{{ macros.fatG }} g</span>
           <div class="bar"><div class="bar__fill" [style.width.%]="macroShare(macros.fatG * 9)"></div></div>
         </div>
@@ -71,8 +71,8 @@
     } @else if (!loading()) {
       <div class="empty-state">
         <p class="empty">
-          Výživový plán sa počíta z tvojho profilu (váha, výška, vek, pohlavie) podľa
-          Mifflina-St Jeora a úrovne aktivity. Vygeneruj ho tlačidlom vyššie.
+          The nutrition plan is calculated from your profile (weight, height, age, sex) using
+          the Mifflin-St Jeor equation and your activity level. Generate it with the button above.
         </p>
       </div>
     }

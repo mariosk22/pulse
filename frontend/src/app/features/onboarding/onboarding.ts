@@ -6,19 +6,19 @@ import { UserService } from '../../core/services/user.service';
 import { apiErrorMessage } from '../../core/services/api-error';
 import { Gender, Goal, Level, Sport } from '../../core/models/user.model';
 
-/** Mirrors com.pulse.backend.entity.enums.Goal, with Slovak copy for the UI. */
+/** Mirrors com.pulse.backend.entity.enums.Goal, with English copy for the UI. */
 const GOALS: { value: Goal; label: string; hint: string }[] = [
-  { value: 'WEIGHT_LOSS', label: 'Schudnutie', hint: 'Kardio a mierny kalorický deficit' },
-  { value: 'MUSCLE_GAIN', label: 'Naberanie svalov', hint: 'Silový trening a bielkoviny navyše' },
-  { value: 'ENDURANCE', label: 'Vytrvalosť', hint: 'Dlhšie a opakovanejšie treningy' },
-  { value: 'STRENGTH', label: 'Sila', hint: 'Vysoké zaťaženie, nižší počet opakovaní' },
-  { value: 'GENERAL_FITNESS', label: 'Celková kondícia', hint: 'Vyrovnaný trening na všetko' },
+  { value: 'WEIGHT_LOSS', label: 'Weight loss', hint: 'Cardio and a mild calorie deficit' },
+  { value: 'MUSCLE_GAIN', label: 'Muscle gain', hint: 'Strength training and extra protein' },
+  { value: 'ENDURANCE', label: 'Endurance', hint: 'Longer and more frequent workouts' },
+  { value: 'STRENGTH', label: 'Strength', hint: 'Heavy load, fewer reps' },
+  { value: 'GENERAL_FITNESS', label: 'General fitness', hint: 'Balanced training for everything' },
 ];
 
 const LEVELS: { value: Level; label: string; hint: string }[] = [
-  { value: 'BEGINNER', label: 'Začiatočník', hint: '3 treningy v týždni' },
-  { value: 'INTERMEDIATE', label: 'Pokročilý', hint: '5 treningov v týždni' },
-  { value: 'PRO', label: 'Profesionál', hint: '6 treningov v týždni' },
+  { value: 'BEGINNER', label: 'Beginner', hint: '3 workouts per week' },
+  { value: 'INTERMEDIATE', label: 'Intermediate', hint: '5 workouts per week' },
+  { value: 'PRO', label: 'Pro', hint: '6 workouts per week' },
 ];
 
 @Component({
@@ -62,7 +62,7 @@ export class Onboarding implements OnInit {
       },
       error: (err) => {
         this.sportsError.set(
-          apiErrorMessage(err, 'Nepodarilo sa načítať športy. Skontroluj, či beží backend.'),
+          apiErrorMessage(err, 'Could not load sports. Check that the backend is running.'),
         );
         this.loadingSports.set(false);
       },
@@ -112,7 +112,7 @@ export class Onboarding implements OnInit {
         error: (err) => {
           this.submitting.set(false);
           this.errorMessage.set(
-            apiErrorMessage(err, 'Onboarding sa nepodarilo uložiť. Skús to prosím znova.'),
+            apiErrorMessage(err, 'Could not save onboarding. Please try again.'),
           );
         },
       });

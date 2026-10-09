@@ -28,9 +28,9 @@ public class UserService {
     public UserResponse updateOnboarding(User principalUser,OnboardingRequest request){
         Sport sport = sportRepository.findById(request.getSportId()).orElseThrow(()->new ApiException(HttpStatus.NOT_FOUND,"Sport does not exist"));
 
-        // principal.getUser() je entita nacitana v JwtAuthenticationFilter, teda mimo
-        // open-in-view session. Sport by bol odpojeny proxy a getName() by vyhodil
-        // LazyInitializationException, preto sa profil znovu nacita so sportom.
+        // principal.getUser() is an entity loaded in JwtAuthenticationFilter, outside
+        // the open-in-view session. The sport would be a detached proxy and getName()
+        // would throw a LazyInitializationException, so reload the profile with the sport.
         User user = loadWithSport(principalUser);
 
         user.setSport(sport);

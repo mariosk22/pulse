@@ -28,14 +28,14 @@ public class TrainingPlanGeneratorService {
 
     @Transactional
     public TrainingPlan generate(User principalUser, int durationWeeks) {
-        // principal.getUser() je odpojeny (nacitany v JwtAuthenticationFilter mimo
-        // open-in-view session), takze user.getSport().getId() by vyhodil
-        // LazyInitializationException. Nacarame pouzivatela znova so sportom.
+        // principal.getUser() is detached (loaded in JwtAuthenticationFilter outside
+        // the open-in-view session), so user.getSport().getId() would throw a
+        // LazyInitializationException. Reload the user together with the sport.
         User user = userRepository.findWithSportById(principalUser.getId())
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User does not exist"));
         if (user.getSport() == null || user.getLevel() == null || user.getGoal() == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST,
-                    "Najprv dokonci onboarding (sport, uroven, ciel)");
+                    "Complete onboarding first (sport, level, goal)");
         }
 
         TrainingPlan plan = TrainingPlan.builder()
@@ -77,7 +77,7 @@ public class TrainingPlanGeneratorService {
 
         if (available.isEmpty()) {
             throw new ApiException(HttpStatus.CONFLICT,
-                    "Pre tento sport/uroven zatial nemame dostatok cviceni v katalogu");
+                    "There are not enough exercises in the catalog for this sport/level yet");
         }
 
         Workout workout = Workout.builder()
@@ -114,11 +114,11 @@ public class TrainingPlanGeneratorService {
 
     private String workoutNameFor(Goal goal) {
         return switch (goal) {
-            case WEIGHT_LOSS -> "Spalovanie tuku";
-            case MUSCLE_GAIN -> "Naberanie svalov";
-            case ENDURANCE -> "Vytrvalostny trening";
-            case STRENGTH -> "Silovy trening";
-            case GENERAL_FITNESS -> "Celkova kondicia";
+            case WEIGHT_LOSS -> "Fat burning";
+            case MUSCLE_GAIN -> "Muscle gain";
+            case ENDURANCE -> "Endurance training";
+            case STRENGTH -> "Strength training";
+            case GENERAL_FITNESS -> "General fitness";
         };
     }
 

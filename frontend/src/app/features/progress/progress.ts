@@ -44,7 +44,7 @@ export class Progress implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(apiErrorMessage(err, 'Záznamy sa nepodarilo načítať.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Could not load the records.'));
         this.loading.set(false);
       },
     });
@@ -58,7 +58,7 @@ export class Progress implements OnInit {
 
     const { logDate, weightKg, bodyFatPct, notes } = this.form.getRawValue();
     if (weightKg === null && bodyFatPct === null) {
-      this.formError.set('Vyplň aspoň váhu alebo percento tuku.');
+      this.formError.set('Enter at least a weight or a body-fat percentage.');
       return;
     }
 
@@ -82,7 +82,7 @@ export class Progress implements OnInit {
         },
         error: (err) => {
           this.submitting.set(false);
-          this.errorMessage.set(apiErrorMessage(err, 'Záznam sa nepodarilo uložiť.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not save the record.'));
         },
       });
   }

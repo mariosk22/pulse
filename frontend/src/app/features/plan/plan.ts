@@ -9,13 +9,13 @@ import { Shell } from '../layout/shell/shell';
 
 const WEEKDAY_LABELS = [
   '',
-  'Pondelok',
-  'Utorok',
-  'Streda',
-  'Štvrtok',
-  'Piatok',
-  'Sobota',
-  'Nedeľa',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
 ];
 
 @Component({
@@ -93,7 +93,7 @@ export class Plan implements OnInit {
       error: (err) => {
         // No plan yet is a normal state, the empty view explains it.
         if (!isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Plán sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load the plan.'));
         }
       },
       complete: () => this.loading.set(false),
@@ -106,7 +106,7 @@ export class Plan implements OnInit {
       next: (summaries) => this.history.set(summaries),
       error: (err) => {
         if (!isNotFound(err)) {
-          this.errorMessage.set(apiErrorMessage(err, 'Históriu plánov sa nepodarilo načítať.'));
+          this.errorMessage.set(apiErrorMessage(err, 'Could not load the plan history.'));
         }
       },
       complete: () => this.loadingHistory.set(false),
@@ -133,7 +133,7 @@ export class Plan implements OnInit {
       error: (err) => {
         this.loadingDetail.set(false);
         this.selectedPlanId.set(null);
-        this.errorMessage.set(apiErrorMessage(err, 'Plán sa nepodarilo načítať.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Could not load the plan.'));
       },
     });
   }
@@ -172,7 +172,7 @@ export class Plan implements OnInit {
         this.generating.set(false);
         // The backend answers 409 when the exercise catalogue has nothing for
         // this sport/level combination, and 400 before onboarding is done.
-        this.errorMessage.set(apiErrorMessage(err, 'Plán sa nepodarilo vygenerovať.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Could not generate the plan.'));
       },
     });
   }
@@ -200,7 +200,7 @@ export class Plan implements OnInit {
       },
       error: (err) => {
         this.completingId.set(null);
-        this.errorMessage.set(apiErrorMessage(err, 'Stav treningu sa nepodarilo uložiť.'));
+        this.errorMessage.set(apiErrorMessage(err, 'Could not save the workout status.'));
       },
     });
   }

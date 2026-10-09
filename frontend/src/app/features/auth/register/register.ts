@@ -45,7 +45,7 @@ export class Register {
       error: (err) => {
         this.submitting.set(false);
         this.errorMessage.set(
-          apiErrorMessage(err, 'Registrácia zlyhala. Skús to prosím znova.'),
+          apiErrorMessage(err, 'Registration failed. Please try again.'),
         );
       },
     });

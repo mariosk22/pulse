@@ -37,7 +37,7 @@ public class NutritionController {
     @GetMapping("/active")
     public ResponseEntity<NutritionPlanResponse> getActive(@AuthenticationPrincipal UserPrincipal principal) {
         NutritionPlan plan = nutritionPlanRepository.findFirstByUserOrderByIdDesc(principal.getUser())
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Nemas zatial ziadny vyzivovy plan"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "You don't have a nutrition plan yet"));
         return ResponseEntity.ok(new NutritionPlanResponse(plan));
     }
 }

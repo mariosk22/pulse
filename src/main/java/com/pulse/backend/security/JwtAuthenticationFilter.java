@@ -40,8 +40,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // doFilter musi byt vykonany aj pre neplatny/neexistujuci token, inak by
-        // request zostal visiet a nikdy by nedoslo k dispatchu na controller.
+        // doFilter must run even for an invalid/missing token, otherwise the
+        // request would hang and never be dispatched to the controller.
         filterChain.doFilter(request,response);
     }
 }

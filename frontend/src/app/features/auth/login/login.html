@@ -1,46 +1,46 @@
 <div class="auth-layout">
   <section class="auth-visual">
     <div class="auth-visual__overlay">
-      <span class="auth-visual__eyebrow">Pick up where You Left Off</span>
-      <h2 class="auth-visual__title">Váš tréningový plán<br/>začína tu</h2>
+      <span class="auth-visual__eyebrow">Pick up where you left off</span>
+      <h2 class="auth-visual__title">Your training plan<br/>starts here</h2>
       <div class="auth-visual__stats">
       <div class="stat">
         <span class="stat__label">SPORT</span>
-        <span class="stat__value">8 ŠPORTOV</span>
+        <span class="stat__value">8 SPORTS</span>
       </div>
       <div class="stat">
-        <span class="stat__label">ÚROVEŇ</span>
-        <span class="stat__value">3 ÚROVNE</span>
+        <span class="stat__label">LEVEL</span>
+        <span class="stat__value">3 LEVELS</span>
       </div>
       <div class="stat">
-        <span class="stat__label">PLÁN</span>
-        <span class="stat__value stat__value--accent">AŽ 12 TÝŽDŇOV</span>
+        <span class="stat__label">PLAN</span>
+        <span class="stat__value stat__value--accent">UP TO 12 WEEKS</span>
       </div>
  </div>
 </div>
 </section>
 <section class="auth-form-panel">
   <div class="auth-form-inner">
-    <span class="auth-eyebrow">PRIHLÁSENIE</span>
-    <h1 class="auth-title">Vitaj späť</h1>
+    <span class="auth-eyebrow">LOG IN</span>
+    <h1 class="auth-title">Welcome back</h1>
     <form class="auth-form" [formGroup]="form" (ngSubmit)="OnSubmit()">
       <label class="field">
         <span class="field__label">EMAIL</span>
         <input class="field__input" type="email" formControlName="email" placeholder="you@gmail.com"/>
       </label>
       <label class="field">
-        <span class="field__label">HESLO</span>
+        <span class="field__label">PASSWORD</span>
         <input class="field__input" type="password" formControlName="password" />
       </label>
       @if (errorMessage()) {
         <p class="form-error">{{errorMessage()}}</p>
       }
       <button class="btn btn--primary btn--block" type="submit" [disabled]="form.invalid || submitting()">
-        PRIHLÁSIŤ SA <span class="btn__arrow">&rarr;</span>
+        LOG IN <span class="btn__arrow">&rarr;</span>
       </button>
     </form>
     <p class="auth-footer">
-      Ešte nemáš účet? <a routerLink="/register">ZAREGISTRUJ SA</a>
+      Don't have an account yet? <a routerLink="/register">SIGN UP</a>
     </p>
   </div>
 </section>

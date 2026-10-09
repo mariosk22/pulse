@@ -36,7 +36,7 @@ public class TrainingPlanController {
     public ResponseEntity<TrainingPlanResponse> getActive(@AuthenticationPrincipal UserPrincipal principal) {
         TrainingPlan plan = trainingPlanRepository
                 .findFirstByUserAndStatusOrderByStartDateDesc(principal.getUser(), PlanStatus.ACTIVE)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Nemas zatial ziadny aktivny plan"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "You don't have an active plan yet"));
         return ResponseEntity.ok(new TrainingPlanResponse(plan));
     }
 }
