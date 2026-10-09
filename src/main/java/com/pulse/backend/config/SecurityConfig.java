@@ -51,7 +51,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth ->auth.requestMatchers
-                        ("/api/auth/**","/swagger-ui/**","/v3/api-docs/**")
+                        ("/api/auth/**","/swagger-ui/**","/v3/api-docs/**","/error")
                 .permitAll().requestMatchers(HttpMethod.GET,"/api/sports/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class);

@@ -15,6 +15,20 @@ const guestGuard: CanActivateFn = () => {
   return auth.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true;
 };
 
+/** Keeps users who already finished onboarding out of the onboarding form. */
+const onboardingGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.needsOnboarding() ? true : router.createUrlTree(['/dashboard']);
+};
+
+/** Sends users who still owe onboarding data to onboarding first. */
+const onboardedGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.needsOnboarding() ? router.createUrlTree(['/onboarding']) : true;
+};
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'login' },
   {
@@ -30,15 +44,30 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding',
-    canActivate: [authGuard],
+    canActivate: [authGuard, onboardingGuard],
     loadComponent: () =>
       import('./features/onboarding/onboarding').then((m) => m.Onboarding),
   },
   {
     path: 'dashboard',
-    canActivate: [authGuard],
+    canActivate: [authGuard, onboardedGuard],
     loadComponent: () =>
       import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+  },
+  {
+    path: 'plan',
+    canActivate: [authGuard, onboardedGuard],
+    loadComponent: () => import('./features/plan/plan').then((m) => m.Plan),
+  },
+  {
+    path: 'nutrition',
+    canActivate: [authGuard, onboardedGuard],
+    loadComponent: () => import('./features/nutrition/nutrition').then((m) => m.Nutrition),
+  },
+  {
+    path: 'progress',
+    canActivate: [authGuard, onboardedGuard],
+    loadComponent: () => import('./features/progress/progress').then((m) => m.Progress),
   },
   { path: '**', redirectTo: 'login' },
 ];

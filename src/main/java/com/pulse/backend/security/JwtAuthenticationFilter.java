@@ -38,8 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            filterChain.doFilter(request,response);
         }
 
+        // doFilter musi byt vykonany aj pre neplatny/neexistujuci token, inak by
+        // request zostal visiet a nikdy by nedoslo k dispatchu na controller.
+        filterChain.doFilter(request,response);
     }
 }

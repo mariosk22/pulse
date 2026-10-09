@@ -1,9 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { ApiError } from '../../../core/models/user.model';
+import { apiErrorMessage } from '../../../core/services/api-error';
 
 @Component({
   selector: 'app-login',
@@ -34,17 +33,15 @@ export class Login {
     this.errorMessage.set('');
 
     this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigateByUrl('/dashboard'),
-      error: (err: HttpErrorResponse) => {
+      next: (user) => {
         this.submitting.set(false);
-        this.errorMessage.set(this.readError(err, 'Login failed. Please try again.'));
+        // Fresh accounts have no sport/level/goal, so they still owe onboarding.
+        void this.router.navigateByUrl(user.sportName ? '/dashboard' : '/onboarding');
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.errorMessage.set(apiErrorMessage(err, 'Prihlásenie zlyhalo. Skús to prosím znova.'));
       },
     });
-  }
-
-  /** Surfaces the message from the backend's GlobalExceptionHandler body. */
-  private readError(err: HttpErrorResponse, fallback: string): string {
-    const body = err.error as ApiError | null;
-    return body?.message ?? fallback;
   }
 }

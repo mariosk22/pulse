@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, forkJoin, of, switchMap, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/user.model';
 
 const TOKEN_KEY = 'pulse.token';
 const USER_KEY = 'pulse.user';
 
 /**
- * Endpoints under /api/auth/** are permitAll in SecurityConfig, so they do not
- * require a token. The controllers are not implemented on the backend branch
- * yet, so these calls will 404 until that lands.
+ * Owns the session: the JWT plus the cached profile from GET /api/users/me.
+ *
+ * AuthResponse only carries id, email and fullName, so login and register both
+ * follow up with the profile endpoint to get sport, level and goal. Those decide
+ * whether onboarding still has to run.
  */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,21 +23,42 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.token() !== null);
   readonly user = this.currentUser.asReadonly();
 
-  login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>('/api/auth/login', credentials)
-      .pipe(tap((response) => this.persist(response)));
+  /**
+   * The backend refuses to generate a training plan or a nutrition plan until
+   * sport, level and goal are set, so the router sends users without them to
+   * onboarding.
+   */
+  readonly needsOnboarding = computed(() => {
+    const user = this.currentUser();
+    return user !== null && (user.sportName === null || user.level === null || user.goal === null);
+  });
+
+  login(credentials: LoginRequest): Observable<User> {
+    return this.http.post<AuthResponse>('/api/auth/login', credentials).pipe(
+      switchMap((response) => this.startSession(response)),
+    );
   }
 
-  register(payload: RegisterRequest): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>('/api/auth/register', payload)
-      .pipe(tap((response) => this.persist(response)));
+  register(payload: RegisterRequest): Observable<User> {
+    return this.http.post<AuthResponse>('/api/auth/register', payload).pipe(
+      switchMap((response) => this.startSession(response)),
+    );
   }
 
   /** Bearer token for the JWT interceptor to attach. */
   getToken(): string | null {
     return this.token();
+  }
+
+  /** Re-reads the profile after onboarding or any other profile change. */
+  refreshProfile(): Observable<User> {
+    return this.http.get<User>('/api/users/me').pipe(tap((user) => this.setUser(user)));
+  }
+
+  /** Stores a profile the caller already has, e.g. the onboarding response. */
+  setUser(user: User): void {
+    this.currentUser.set(user);
+    this.writeStorage(USER_KEY, user);
   }
 
   logout(): void {
@@ -45,23 +68,12 @@ export class AuthService {
     this.clearStorage(USER_KEY);
   }
 
-  private persist(response: AuthResponse): void {
+  /** Persists the token, then fills the cached profile from the backend. */
+  private startSession(response: AuthResponse): Observable<User> {
     this.token.set(response.token);
-    const user: User = {
-      id: response.userId,
-      email: response.email,
-      fullName: response.fullName,
-      gender: null,
-      age: null,
-      heightCm: null,
-      weightKg: null,
-      sportName: null,
-      level: null,
-      goal: null,
-    };
-    this.currentUser.set(user);
     this.writeStorage(TOKEN_KEY, response.token);
-    this.writeStorage(USER_KEY, user);
+
+    return this.refreshProfile();
   }
 
   private readStorage(key: string): string | null {

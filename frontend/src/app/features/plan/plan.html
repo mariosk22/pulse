@@ -1,0 +1,202 @@
+<app-shell>
+  <div class="page">
+    <header class="page__head">
+      <div>
+        <span class="page__eyebrow">PLAN</span>
+        <h1 class="page__title">Tréningový plán</h1>
+      </div>
+      <div class="page__actions">
+        <label class="field field--inline">
+          <span class="field__label">TÝŽDNE</span>
+          <input
+            class="field__input field__input--num"
+            type="number"
+            min="1"
+            max="52"
+            [(ngModel)]="durationWeeks"
+          />
+        </label>
+        <button
+          class="btn btn--primary"
+          type="button"
+          (click)="onGenerate()"
+          [disabled]="generating()"
+        >
+          @if (activePlan()) {
+            REGENEROVAŤ
+          } @else if (generating()) {
+            GENERUJEM…
+          } @else {
+            VYTVORIŤ PLÁN
+          }
+        </button>
+      </div>
+    </header>
+
+    @if (errorMessage()) {
+      <p class="form-error">{{ errorMessage() }}</p>
+    }
+
+    @if (isViewingArchived()) {
+      <div class="viewer-bar">
+        <span class="viewer-bar__badge">ARCHIVOVANÝ PLÁN</span>
+        <button class="link-btn" type="button" (click)="selectActive()">
+          &larr; SPÄŤ NA AKTÍVNY PLÁN
+        </button>
+      </div>
+    }
+
+    @if (loading() || loadingDetail()) {
+      <p class="empty">Načítavam plán…</p>
+    }
+
+    @if (plan(); as currentPlan) {
+      <div class="meta">
+        <div class="meta__item">
+          <span>ŠPORT</span><strong>{{ currentPlan.sportName }}</strong>
+        </div>
+        <div class="meta__item">
+          <span>ÚROVEŇ</span><strong>{{ currentPlan.level }}</strong>
+        </div>
+        <div class="meta__item">
+          <span>CIEĽ</span><strong>{{ currentPlan.goal }}</strong>
+        </div>
+        <div class="meta__item">
+          <span>ZAČIATOK</span><strong>{{ currentPlan.startDate }}</strong>
+        </div>
+        <div class="meta__item">
+          <span>STAV</span><strong>{{ currentPlan.status }}</strong>
+        </div>
+      </div>
+
+      <div class="weeks">
+        @for (week of weeks(); track week) {
+          <button
+            type="button"
+            class="week"
+            [class.week--active]="currentWeek() === week"
+            (click)="selectWeek(week)"
+          >
+            T{{ week }}
+          </button>
+        }
+      </div>
+
+      <p class="week-label">
+        Týždeň {{ currentWeek() }} &middot; {{ completedInWeek() }} /
+        {{ currentWeekWorkouts().length }} dokončených
+      </p>
+
+      <div class="workouts">
+        @for (workout of currentWeekWorkouts(); track workout.id) {
+          <article class="workout" [class.workout--done]="workout.completed">
+            <header class="workout__head">
+              <div class="workout__titles">
+                <span class="workout__day">{{ weekdayLabels[workout.dayOfWeek] }}</span>
+                <span class="workout__name">{{ workout.name }}</span>
+              </div>
+              <div class="workout__actions">
+                @if (workout.completed) {
+                  <span class="workout__badge">DOKONČENÉ</span>
+                }
+                <button
+                  type="button"
+                  class="btn btn--sm"
+                  [class.btn--primary]="!workout.completed"
+                  [class.btn--ghost]="workout.completed"
+                  (click)="onToggleWorkout(workout)"
+                  [disabled]="completingId() === workout.id || isViewingArchived()"
+                >
+                  @if (completingId() === workout.id) {
+                    UKLADÁM…
+                  } @else if (workout.completed) {
+                    ZRUŠIŤ
+                  } @else {
+                    DOKONČIŤ
+                  }
+                </button>
+              </div>
+            </header>
+            <table class="exercises">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>CVIČENIE</th>
+                  <th>SADY</th>
+                  <th>REPS</th>
+                  <th>ODPOČININK</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (exercise of workout.exercises; track exercise.orderIndex) {
+                  <tr>
+                    <td class="num">{{ exercise.orderIndex }}</td>
+                    <td>{{ exercise.exerciseName }}</td>
+                    <td class="num">{{ exercise.sets ?? '—' }}</td>
+                    <td class="num">{{ exercise.reps ?? '—' }}</td>
+                    <td class="num">
+                      {{ exercise.restSeconds ? exercise.restSeconds + 's' : '—' }}
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </article>
+        } @empty {
+          <p class="empty">Tento týždeň nemá žiadne treningy.</p>
+        }
+      </div>
+    } @else if (!loading()) {
+      <div class="empty-state">
+        <p class="empty">
+          @if (user()?.sportName) {
+            Zatiaľ nemáš vygenerovaný plán. Klikni na „Vytvoriť plán“ a backend zostaví treningy
+            podľa tvojho športu a úrovne.
+          } @else {
+            Najprv dokonči onboarding, aby plán mal z čoho vychádzať.
+          }
+        </p>
+      </div>
+    }
+
+    <section class="history">
+      <div class="history__head">
+        <h2 class="history__title">HISTÓRIA PLÁNOV</h2>
+        @if (history().length > 1) {
+          <span class="history__count">{{ history().length }} plánov</span>
+        }
+      </div>
+
+      @if (loadingHistory()) {
+        <p class="empty">Načítavam históriu…</p>
+      } @else if (history().length === 0) {
+        <p class="empty">Zatiaľ nemáš žiadne uložené plány.</p>
+      } @else {
+        <ul class="history__list">
+          @for (item of history(); track item.id) {
+            <li>
+              <button
+                type="button"
+                class="history__row"
+                [class.history__row--active]="isCurrent(item)"
+                (click)="onSelectPlan(item)"
+              >
+                <span class="history__date">{{ item.startDate }}</span>
+                <span class="history__main">
+                  {{ item.sportName }} &middot; {{ item.level }} &middot; {{ item.goal }}
+                </span>
+                <span class="history__weeks">{{ item.durationWeeks }} týž.</span>
+                <span
+                  class="history__status"
+                  [class.history__status--active]="item.status === 'ACTIVE'"
+                >
+                  {{ item.status }}
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+</app-shell>

@@ -1,1 +1,153 @@
-<p>dashboard works!</p>
+<app-shell>
+  <div class="dash">
+    <header class="dash__header">
+      <div>
+        <span class="dash__eyebrow">PULSE &middot; DASHBOARD</span>
+        @if (user(); as current) {
+          <h1 class="dash__title">Ahoj, {{ current.fullName }}</h1>
+        }
+      </div>
+      @if (loading()) {
+        <span class="dash__loading">Načítavam…</span>
+      }
+    </header>
+
+    @if (errorMessage()) {
+      <p class="form-error">{{ errorMessage() }}</p>
+    }
+
+    <section class="stats">
+      @if (user(); as current) {
+        <div class="stat">
+          <span class="stat__label">ŠPORT</span>
+          <span class="stat__value">{{ current.sportName ?? '—' }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">ÚROVEŇ</span>
+          <span class="stat__value">{{ current.level ?? '—' }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">CIEĽ</span>
+          <span class="stat__value">{{ current.goal ?? '—' }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">POT</span>
+          <span class="stat__value">{{ nutrition()?.dailyCalories ?? '—' }} kcal</span>
+        </div>
+      }
+    </section>
+
+    <section class="panel">
+      <div class="panel__head">
+        <h2 class="panel__title">TRÉNINGOVÝ PLÁN</h2>
+        <div class="panel__aside">
+          @if (plan(); as activePlan) {
+            <span class="panel__meta">
+              {{ activePlan.sportName }} &middot; {{ activePlan.durationWeeks }} týždňov &middot; od
+              {{ activePlan.startDate }}
+            </span>
+          }
+          <a class="panel__link" routerLink="/plan">DETAIL</a>
+        </div>
+      </div>
+
+      @if (plan(); as activePlan) {
+        <div class="weeks">
+          @for (week of weeks(); track week) {
+            <button
+              type="button"
+              class="week"
+              [class.week--active]="currentWeek() === week"
+              (click)="selectWeek(week)"
+            >
+              T{{ week }}
+            </button>
+          }
+        </div>
+
+        <div class="workouts">
+          @for (workout of currentWeekWorkouts(); track workout.id) {
+            <article class="workout">
+              <header class="workout__head">
+                <span class="workout__day">{{ weekdayLabels[workout.dayOfWeek] }}</span>
+                <span class="workout__name">{{ workout.name }}</span>
+              </header>
+              <ol class="exercises">
+                @for (exercise of workout.exercises; track exercise.orderIndex) {
+                  <li class="exercise">
+                    <span class="exercise__name">{{ exercise.exerciseName }}</span>
+                    <span class="exercise__meta">
+                      @if (exercise.sets) {
+                        {{ exercise.sets }}&times;{{ exercise.reps ?? '—' }}
+                      } @else if (exercise.durationSeconds) {
+                        {{ exercise.durationSeconds }}s
+                      } @else {
+                        —
+                      }
+                      @if (exercise.restSeconds) {
+                        &middot; odpočinink {{ exercise.restSeconds }}s
+                      }
+                    </span>
+                  </li>
+                }
+              </ol>
+            </article>
+          } @empty {
+            <p class="empty">Tento týždeň nemá žiadne treningy.</p>
+          }
+        </div>
+      } @else {
+        <p class="empty">Zatiaľ nemáš žiadny aktívny plán.</p>
+        <a class="btn btn--primary" routerLink="/plan">VYTVORIŤ PLÁN</a>
+      }
+    </section>
+
+    <div class="cols">
+      <section class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">VÝŽIVA</h2>
+          <a class="panel__link" routerLink="/nutrition">DETAIL</a>
+        </div>
+        @if (nutrition(); as macros) {
+          <ul class="macros">
+            <li>
+              <span>Bielkoviny</span><strong>{{ macros.proteinG }} g</strong>
+            </li>
+            <li>
+              <span>Sacharidy</span><strong>{{ macros.carbsG }} g</strong>
+            </li>
+            <li>
+              <span>Tuky</span><strong>{{ macros.fatG }} g</strong>
+            </li>
+          </ul>
+        } @else {
+          <p class="empty">Výživový plan ešte nie je vygenerovaný.</p>
+          <a class="btn btn--ghost" routerLink="/nutrition">VYTVORIŤ</a>
+        }
+      </section>
+
+      <section class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">PROGRESS</h2>
+          <a class="panel__link" routerLink="/progress">DETAIL</a>
+        </div>
+        @if (latestLog(); as latest) {
+          <ul class="macros">
+            <li>
+              <span>Dátum</span><strong>{{ latest.logDate }}</strong>
+            </li>
+            <li>
+              <span>Váha</span><strong>{{ latest.weightKg ?? '—' }} kg</strong>
+            </li>
+            <li>
+              <span>Telo tuky</span><strong>{{ latest.bodyFatPct ?? '—' }} %</strong>
+            </li>
+          </ul>
+        } @else {
+          <p class="empty">Zatiaľ nemáš žiadny záznam.</p>
+          <a class="btn btn--ghost" routerLink="/progress">PRIDAŤ ZÁZNAM</a>
+        }
+      </section>
+    </div>
+  </div>
+</app-shell>

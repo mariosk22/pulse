@@ -1,9 +1,8 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { ApiError } from '../../../core/models/user.model';
+import { apiErrorMessage } from '../../../core/services/api-error';
 
 @Component({
   selector: 'app-register',
@@ -39,17 +38,16 @@ export class Register {
     const fullName = `${firstName} ${lastName}`.trim();
 
     this.authService.register({ email, password, fullName }).subscribe({
-      next: () => this.router.navigateByUrl('/onboarding'),
-      error: (err: HttpErrorResponse) => {
+      next: () => {
         this.submitting.set(false);
-        this.errorMessage.set(this.readError(err, 'Registration failed. Please try again.'));
+        void this.router.navigateByUrl('/onboarding');
+      },
+      error: (err) => {
+        this.submitting.set(false);
+        this.errorMessage.set(
+          apiErrorMessage(err, 'Registrácia zlyhala. Skús to prosím znova.'),
+        );
       },
     });
-  }
-
-  /** Surfaces the message from the backend's GlobalExceptionHandler body. */
-  private readError(err: HttpErrorResponse, fallback: string): string {
-    const body = err.error as ApiError | null;
-    return body?.message ?? fallback;
   }
 }

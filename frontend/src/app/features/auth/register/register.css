@@ -4,13 +4,20 @@
   min-height:100vh;
 }
 .auth-form-panel{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+.auth-form-inner{width: 100%;max-width: 420px;}
+.auth-eyebrow{
   display: block;
   color: var(--pulse-text-muted);
   font-size: 12px;
   letter-spacing: 0.1em;
-  margin-bottom:8px ;
+  margin-bottom: 8px;
 }
-.auth-title{font-size: 32px;margin-bottom:20px ;}
+.auth-title{font-size: 32px;margin-bottom: 20px;}
 .steps{
   display: flex;
   gap: 24px;

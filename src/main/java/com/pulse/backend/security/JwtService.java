@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.function.Function;
 @Service
 public class JwtService {
-    @Value("${pulse.jwt.service}")
+    @Value("${pulse.jwt.secret}")
     private String secret;
 
     @Value("${pulse.jwt.expiration-ms}")

@@ -1,0 +1,252 @@
+.dash {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+}
+
+.dash__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.dash__eyebrow {
+  display: block;
+  color: var(--pulse-text-muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.dash__title {
+  font-size: 30px;
+  margin: 0;
+}
+
+.dash__loading {
+  color: var(--pulse-text-muted);
+  font-size: 12px;
+}
+
+.form-error {
+  color: var(--pulse-danger);
+  font-size: 13px;
+  margin: 0 0 24px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  background: var(--pulse-bg-elevated);
+  border: 1px solid var(--pulse-border);
+  border-radius: 4px;
+}
+
+.stat__label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pulse-text-muted);
+}
+
+.stat__value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.panel {
+  padding: 24px;
+  border: 1px solid var(--pulse-border);
+  border-radius: 4px;
+  background: var(--pulse-bg-elevated);
+  margin-bottom: 24px;
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--pulse-border);
+}
+
+.panel__title {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.panel__meta {
+  font-size: 12px;
+  color: var(--pulse-text-muted);
+}
+
+.panel__aside {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.panel__link {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pulse-accent);
+  text-decoration: none;
+}
+
+.weeks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.week {
+  min-width: 40px;
+  background: transparent;
+  border: 1px solid var(--pulse-border);
+  border-radius: 3px;
+  color: var(--pulse-text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px 10px;
+}
+
+.week--active {
+  border-color: var(--pulse-accent);
+  color: var(--pulse-accent);
+  font-weight: 700;
+}
+
+.workouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.workout {
+  border: 1px solid var(--pulse-border);
+  border-radius: 4px;
+  padding: 16px;
+  background: var(--pulse-bg);
+}
+
+.workout__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.workout__day {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--pulse-accent);
+}
+
+.workout__name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.exercises {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exercise {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.exercise__name {
+  font-size: 13px;
+}
+
+.exercise__meta {
+  font-size: 12px;
+  color: var(--pulse-text-muted);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.macros {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.macros li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--pulse-text-muted);
+}
+
+.macros strong {
+  color: var(--pulse-text);
+}
+
+.empty {
+  color: var(--pulse-text-muted);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--pulse-accent);
+  color: var(--pulse-accent-contrast);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--pulse-border);
+  color: var(--pulse-text);
+}
+
+.btn--ghost:hover {
+  border-color: var(--pulse-accent);
+}

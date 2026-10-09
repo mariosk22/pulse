@@ -1,23 +1,21 @@
 /**
  * Types mirroring the backend DTOs on the `backend` branch.
  *
- * Enum values marked CONFIRMED are copied verbatim from Java enums that are
- * already written. Values marked INFERRED are placeholders: the matching Java
- * enums (Role, Gender, Goal, Level) are currently empty classes, so these
- * need to be reconciled with the backend before the API can return them.
+ * Enum values are copied verbatim from the Java enums in
+ * com.pulse.backend.entity.enums.
  */
 
-export type Gender = 'MALE' | 'FEMALE' | 'OTHER'; // INFERRED
+export type Gender = 'MALE' | 'FEMALE';
 export type Goal =
-  | 'FAT_LOSS'
+  | 'WEIGHT_LOSS'
   | 'MUSCLE_GAIN'
   | 'ENDURANCE'
-  | 'GENERAL_FITNESS'; // INFERRED
-export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED'; // INFERRED
+  | 'STRENGTH'
+  | 'GENERAL_FITNESS';
+export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'PRO';
 
-export type Role = 'USER' | 'ADMIN'; // INFERRED
+export type Role = 'USER' | 'ADMIN';
 
-// CONFIRMED from com.pulse.backend.entity.enums
 export type PlanStatus = 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
 export type ExerciseType = 'STRENGTH' | 'CARDIO' | 'MOBILITY' | 'SPORT_SPECIFIC';
 export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
@@ -68,10 +66,14 @@ export interface OnboardingRequest {
   weightKg?: number;
 }
 
-/**
- * Mirrors the body produced by exception/GlobalExceptionHandler.java.
- * Message-only field, so surfaces backend validation text to the user.
- */
+/** Mirrors entity/Sport.java, returned by GET /api/sports */
+export interface Sport {
+  id: number;
+  name: string;
+  description: string | null;
+}
+
+/** Body of the GlobalExceptionHandler error responses. */
 export interface ApiError {
   timestamp?: string;
   status?: number;
